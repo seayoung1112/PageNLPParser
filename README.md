@@ -9,6 +9,8 @@ Workflow to parse and write books to database:
   
   the format of preprocessed file will be each paragraph separated by one blank line (two \n\n) and each chapter title
   will be a single paragraph with a [--TITLE--] tag
+
+  open this file with an text editor with grammer checking and correct possible mistakes (depending on the quality of source)
   
 3 run PageParser class (Java) 
   

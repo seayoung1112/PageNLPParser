@@ -26,6 +26,7 @@ public class PageParser {
 	private int _index;
 	private int _words;
 	private Mongo _mongoClient;
+	private DB _db;
 	private DBCollection _coll;
 	private BasicDBObject _doc;
 	private BasicDBList _sentences;
@@ -37,8 +38,8 @@ public class PageParser {
 		_index = 0;
 		// initialize database 
 		_mongoClient = new Mongo();
-		DB db = _mongoClient.getDB("learnbyread");
-		_coll = db.getCollection("pages");
+		_db = _mongoClient.getDB("learnbyread");
+		_coll = _db.getCollection("pages");
 		newPage();
 	}
 	
@@ -68,22 +69,18 @@ public class PageParser {
 	
 	public void finish(){
 		endPage();
+		DBCollection bookColl = _db.getCollection("books");
+		BasicDBObject query = new BasicDBObject("title", _bookname);
+		BasicDBObject doc = new BasicDBObject("title", _bookname).append("pageNum", _index - 1);
+		bookColl.update(query, doc, true, false);
 	}
 	
 	private void endPage()
 	{
 		_doc.append("sentences", _sentences);
 		// save to db
-		PrintWriter out;
-		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter("test.txt", true)));
-			out.println(_doc.toString());
-		    out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
+		BasicDBObject query = new BasicDBObject("book", _bookname);
+	    _coll.update(query.append("index", _index), _doc, true, false);
 		// start a new page
 		newPage();
 	}
