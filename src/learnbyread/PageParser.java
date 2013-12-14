@@ -70,6 +70,10 @@ public class PageParser {
 		DBCollection bookColl = _db.getCollection("books");
 		BasicDBObject query = new BasicDBObject("title", _bookname);
 		BasicDBObject doc = new BasicDBObject("title", _bookname).append("pageNum", _index - 1);
+		String[] parts = "teststst".split("[\\[\\]]");
+		doc.append("mainTitle", parts[0]);
+		if(parts.length == 3)
+			doc.append("ep", parts[1]).append("subTitle", parts[2]);
 		bookColl.update(query, doc, true, false);
 	}
 	
