@@ -1,10 +1,7 @@
 package learnbyread;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
@@ -20,9 +17,9 @@ import com.mongodb.BasicDBList;
 import learnbyread.core.TextProcessor;
 
 public class PageParser {
-	static final int WORD_PER_PAGE = 1000;
 	static final String TITLE_TAG = "\\[--TITLE--\\]";
 	private String _bookname;
+	private int _wordPerPage;
 	private int _index;
 	private int _words;
 	private Mongo _mongoClient;
@@ -32,9 +29,10 @@ public class PageParser {
 	private BasicDBList _sentences;
 	private boolean _hasTitle = false;
 	
-	public PageParser(String bookname) throws UnknownHostException
+	public PageParser(String bookname, int wordPerPage) throws UnknownHostException
 	{
 		_bookname = bookname;
+		_wordPerPage = wordPerPage;
 		_index = 0;
 		// initialize database 
 		_mongoClient = new Mongo();
@@ -62,7 +60,7 @@ public class PageParser {
 			// add separator to end of paragraph
 			_sentences.add("");
 			_words += tp.getWordsCount();
-			if(_words > WORD_PER_PAGE)
+			if(_words > _wordPerPage)
 				endPage();
 		}
 	}
@@ -102,10 +100,16 @@ public class PageParser {
 			return;
 		}
 		String fileName = args[0];
+		String wordPerPageStr = args[1];
+		int wordPerPage = 600;
+		if(wordPerPageStr != null)
+		{
+			wordPerPage = Integer.parseInt(wordPerPageStr);
+		}
 		// paragraphs are separated by two \n
 		Scanner s = new Scanner(new File(fileName), "UTF-8").useDelimiter("\n\n");
 		String bookname = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length() - 4);
-		PageParser parser = new PageParser(bookname);
+		PageParser parser = new PageParser(bookname, wordPerPage);
 		System.out.println("start processing");
 		// each of hasNext is a paragraph
 		while(s.hasNext())
