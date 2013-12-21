@@ -111,7 +111,7 @@ public class PageParser {
 		}
 		// paragraphs are separated by two \n
 		Scanner s = new Scanner(new File(fileName), "UTF-8").useDelimiter("\n\n");
-		String bookname = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length() - 4);
+		String bookname = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length() - 4);
 		PageParser parser = new PageParser(bookname, wordPerPage);
 		System.out.println("start processing");
 		// each of hasNext is a paragraph
