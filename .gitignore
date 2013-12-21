@@ -1,6 +1,7 @@
 books
 bin
 lib
+out
 output
 *.txt
 *.pre

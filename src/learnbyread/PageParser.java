@@ -104,11 +104,10 @@ public class PageParser {
 			return;
 		}
 		String fileName = args[0];
-		String wordPerPageStr = args[1];
-		int wordPerPage = 600;
-		if(wordPerPageStr != null)
+		int wordPerPage = 300;
+		if(args.length >= 2)
 		{
-			wordPerPage = Integer.parseInt(wordPerPageStr);
+			wordPerPage = Math.max(100, Integer.parseInt(args[1]));
 		}
 		// paragraphs are separated by two \n
 		Scanner s = new Scanner(new File(fileName), "UTF-8").useDelimiter("\n\n");
